@@ -14,6 +14,13 @@ void print(const char *msg) {
     }
 }
 
+void clear(void) {
+    for (size_t i = 0; i < 80 * 25; i++) {
+        VGA_BUFFER[i] = (uint16_t)' ' | ((uint16_t)VGA_COLOR << 8);
+    }
+    cursor = 0;
+}
+
 void kernel_main(void) {
     for (;;) {
         __asm__ volatile ("hlt");
