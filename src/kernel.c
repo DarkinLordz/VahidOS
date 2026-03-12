@@ -9,7 +9,7 @@ void print(const char *msg) {
     for (size_t i = 0; msg[i] != '\0'; ++i) {
         if (msg[i] == '\n'){
             new_line();
-        } else {
+        } else { // This will lead to triple fault when cursor exceeds 2000
             VGA_BUFFER[cursor++] = (uint16_t)msg[i] | ((uint16_t)VGA_COLOR << 8);
         }
     }
