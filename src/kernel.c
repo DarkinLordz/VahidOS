@@ -32,9 +32,9 @@ void print_character(const char character) {
     }
 }
 
-void print_string(const char *message) {
-    for (size_t i = 0; message[i] != '\0'; ++i) {
-        print_character(message[i]);
+void print_string(const char *string) {
+    for (size_t i = 0; string[i] != '\0'; ++i) {
+        print_character(string[i]);
     }
 }
 
