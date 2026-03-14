@@ -10,8 +10,6 @@ void execute_command(char *command){
         print_string("Commands: help, clear\n");
     } else if (strcmp(command, "clear") == 0){
         clear();
-    } else if (strcmp(command, "fetch") == 0){
-        print_string("#          # OS:\n #        #  Host:\n  #      #   Kernel:\n   #    #    Uptime:\n    #  #     Shell:\n     ##      Display:\n");
     } else if (strcmp(command, "exit") == 0){
         outw(0x604, 0x2000);
         outw(0x4004, 0x3400);
