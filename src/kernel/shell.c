@@ -15,6 +15,15 @@ void execute_command(char *command){
             print_string(command + 5);
             print_character('\n');
         }
+    } else if (strcmp(command, "halt") == 0){
+        while (1){
+            __asm__ volatile("cli; hlt");
+        }
+    } else if (strcmp(command, "reboot") == 0) {
+        uint8_t good = 0x02;
+        while (good & 0x02)
+            good = inb(0x64);
+        outb(0x64, 0xFE);
     }
 }
 
