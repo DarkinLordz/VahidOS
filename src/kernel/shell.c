@@ -2,7 +2,7 @@
 
 void execute_command(char *command){
     if (strcmp(command, "help") == 0) {
-        print_string("Commands: help, clear, echo, halt, reboot, cpuid\n");
+        print_string("Commands: help, clear, echo, halt, reboot, cpuid, whoami\n");
     } else if (strcmp(command, "clear") == 0){
         clear();
     } else if (strncmp(command, "echo", 4) == 0){
