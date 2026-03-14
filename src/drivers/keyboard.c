@@ -1,4 +1,3 @@
-#include <stdbool.h>
 #include <drivers/keyboard.h>
 
 #define KEYBOARD_DATA_PORT 0x60
