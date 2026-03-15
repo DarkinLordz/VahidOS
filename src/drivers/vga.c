@@ -5,7 +5,7 @@ static const uint8_t VGA_COLOR = 0x0F;
 size_t cursor = 0;
 
 void new_line(void) {
-    cursor += 80 - (cursor % 80);
+    cursor += VGA_WIDTH - (cursor % VGA_WIDTH);
 }
 
 void move_cursor(int direction) {
@@ -13,14 +13,14 @@ void move_cursor(int direction) {
 }
 
 void clear(void) {
-    for (size_t i = 0; i < 80 * 25; i++) {
+    for (size_t i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
         VGA_BUFFER[i] = (uint16_t)' ' | ((uint16_t)VGA_COLOR << 8);
     }
     cursor = 0;
 }
 
 void print_character(const char character) {
-    if (cursor >= 80 * 25) {
+    if (cursor >= VGA_WIDTH * VGA_HEIGHT) {
         clear(); // Clear to not cause triple fault
         cursor = 0;
     }
