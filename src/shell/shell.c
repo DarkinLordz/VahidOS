@@ -32,14 +32,7 @@ void execute_command(char *command){
     }
     else if (strcmp(command, "cpuid") == 0) 
     {
-        uint32_t regs[4];
-        __asm__ volatile("cpuid" : "=a"(regs[3]), "=b"(regs[0]), "=d"(regs[1]), "=c"(regs[2]) : "a"(0));
-
-        char *vendor = (char *)regs;
-
-        vendor[12] = '\0';
-
-        print_string(vendor);
+        print_cpu_vendor();        
     }
     else if (strncmp(command, "color", 5) == 0)
     {
@@ -110,7 +103,9 @@ void execute_command(char *command){
     {
         uint8_t initial_color = get_color();
         set_color(0x01, 0x00);
-        print_string("VV           VV\nVVV         VVV\n VVV       VVV\n  VVV     VVV\n   VVV   VVV\n    VVV VVV\n      VVV");
+        print_string("VV           VV Kernel: Vahix\nVVV         VVV CPU: ");
+        print_cpu_vendor();
+        print_string("\n VVV       VVV\n  VVV     VVV\n   VVV   VVV\n    VVV VVV\n      VVV");
         set_color(initial_color, 0x00);
     } 
     else {
@@ -166,4 +161,15 @@ void shell(void)
         }
         __asm__ volatile("pause");
     }
+}
+void print_cpu_vendor() {
+    
+    uint32_t regs[4];
+        __asm__ volatile("cpuid" : "=a"(regs[3]), "=b"(regs[0]), "=d"(regs[1]), "=c"(regs[2]) : "a"(0));
+
+        char *vendor = (char *)regs;
+
+        vendor[12] = '\0';
+
+        print_string(vendor);
 }
