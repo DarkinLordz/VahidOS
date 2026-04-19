@@ -3,7 +3,7 @@
 void execute_command(char *command){
     if (strcmp(command, "help") == 0)
     {
-        print_string("help\nclear\necho\nhalt\nreboot\ncpuid\ncolor\npeek\ndump\ntetost\ncursor\nrandom\nguess");
+        print_string("help\nclear\necho\nhalt\nreboot\ncpuid\ncolor\npeek\ndump\ntetost\ncursor\nrandom\nguess\nfastfetch");
     }
     else if (strcmp(command, "clear") == 0)
     {
@@ -106,6 +106,13 @@ void execute_command(char *command){
             print_string(random_number_string);
         }
     }
+    else if (strcmp(command, "fastfetch") == 0) 
+    {
+        uint8_t initial_color = get_color();
+        set_color(0x01, 0x00);
+        print_string("VV           VV\nVVV         VVV\n VVV       VVV\n  VVV     VVV\n   VVV   VVV\n    VVV VVV\n      VVV");
+        set_color(initial_color, 0x00);
+    } 
     else {
         print_string(command);
         print_string(": command not found");
