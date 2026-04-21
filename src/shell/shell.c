@@ -12,11 +12,29 @@ const char * cpuid(void){
 
     return vendor;
 }
+const char *quotes(void){
+    static const char *quotes[] = {
+        "Any fool can write code that a computer can understand. Good programmers write code that humans can understand. -- Martin Fowler",
+        "Programming is the art of algorithm design and the craft of debugging errant code.-- Ellen Ullman",
+        "Talk is cheap. Show me the code. -- Linus Torvalds",
+        "The best error message is the one that never shows up. -- Thomas Fuchs",
+        "First, solve the problem. Then, write the code. -- John Johnson",
+        "Experience is the name everyone gives to their mistakes. -- Oscar Wilde",
+        "In order to be irreplaceable, one must always be different. -- Coco Chanel",
+        "Java is to JavaScript what car is to Carpet. -- Chris Heilmann",
+        "The most disastrous thing that you can ever learn is your first programming language. -- Alan Kay",
+        "Programming isn't about what you know; it's about what you can figure out. -- Chris Pine"
+    };
 
+    int count = sizeof(quotes) / sizeof(quotes[0]);
+    uint32_t r = random() % count;
+
+    return quotes[r];
+}
 void execute_command(char *command){
     if (strcmp(command, "help") == 0)
     {
-        print_string("help\nclear\necho\nhalt\nreboot\ncpuid\ncolor\npeek\ndump\ntetost\ncursor\nrandom\nguess\nfetch\ncowsay");
+        print_string("help\nclear\necho\nhalt\nreboot\ncpuid\ncolor\npeek\ndump\ntetost\ncursor\nrandom\nguess\nfetch\ncowsay\nquotes");
     }
     else if (strcmp(command, "clear") == 0)
     {
@@ -147,6 +165,8 @@ void execute_command(char *command){
         char *message = command + 7;
 
         print_string("< "); print_string(message); print_string(" >\n -------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||\n");
+    } else if(strcmp(command, "quotes") == 0) {
+        print_string(quotes());
     }
     else {
         print_string(command);
