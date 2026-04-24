@@ -15,7 +15,7 @@ const char *cpuid(void){
 
 void execute_command(char *command){
     if(strcmp(command, "help") == 0){
-        print_string("help\nclear\necho\nhalt\nreboot\ncpuid\ncolor\npeek\ndump\ntetost\ncursor\nrandom\nguess\nfetch\ncowsay");
+        print_string("help\nclear\necho\nhalt\nreboot\ncpuid\ncolor\npeek\ndump\ntetost\ncursor\nrandom\nguess\nfetch\ncowsay\nloop");
     } else if(strcmp(command, "clear") == 0){
         clear();
     } else if(strncmp(command, "echo", 4) == 0){
@@ -125,6 +125,10 @@ void execute_command(char *command){
         print_string("< ");
         print_string(message);
         print_string(" >\n -------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||\n");
+    } else if(strcmp(command, "loop") == 0){
+        while(true) {
+            print_string("loop");
+        }
     } else {
         print_string(command);
         print_string(": command not found");
