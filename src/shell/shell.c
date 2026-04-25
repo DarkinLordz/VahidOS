@@ -12,6 +12,10 @@ const char *cpuid(void){
 
     return vendor;
 }
+char random_letter(void){
+    uint32_t r = random();
+    return 'a' + (r % 26); // a–z
+}
 
 void execute_command(char *command){
     if(strcmp(command, "help") == 0){
@@ -129,11 +133,20 @@ void execute_command(char *command){
         uint8_t initial_color = get_color();
         set_color(0x02, 0x00);
 
-        uint32_t random_number = random();
-        char random_number_string[64];
-        itoa(random_number, random_number_string);
-        while(true){
-            print_string(random_number_string);
+        while(true) {
+            uint32_t r = random() % 2;
+
+            print_character(r ? '1' : '0');
+
+            if(r == 1) {
+                char letter = random_letter();
+                print_character(letter);
+            } else {
+                uint32_t random_number = random();
+                char random_number_string[64];
+                itoa(random_number, random_number_string);
+                print_string(random_number_string);
+            }
         }
         set_color(initial_color, 0x00);
     } else {
