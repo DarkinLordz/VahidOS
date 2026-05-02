@@ -1,9 +1,9 @@
-CC      := i686-elf-gcc
-LD      := i686-elf-gcc
-AS      := i686-elf-gcc
-CFLAGS  := -std=gnu99 -ffreestanding -O2 -Wall -Wextra -MMD -MP -Iinclude
-ASFLAGS := -ffreestanding
-LDFLAGS := -T linker.ld -ffreestanding -O2 -nostdlib
+CC      := gcc
+LD      := gcc
+AS      := gcc
+CFLAGS  := -std=gnu99 -ffreestanding -O2 -Wall -Wextra -MMD -MP -Iinclude -m32
+ASFLAGS := -ffreestanding -m32
+LDFLAGS := -T linker.ld -ffreestanding -O2 -nostdlib -m32
 
 SRCDIR  := src
 OBJDIR  := build
