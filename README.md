@@ -17,7 +17,7 @@
 ## Build
 
 Requirements:
-- `i686-elf-gcc` cross compiler
+- `gcc` a regular C compiler, which we will use as a cross compiler
 - `grub-mkrescue`
 
 Commands:
