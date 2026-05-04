@@ -38,14 +38,25 @@ void cmd_cpuid(char *args) {
 void cmd_color(char *args) {
     if (!args || !*args) return;
 
-    if(strcmp(args, "black") == 0)        { set_color(0x00, 0x00); }
-    else if(strcmp(args, "blue") == 0)    { set_color(0x01, 0x00); }
-    else if(strcmp(args, "green") == 0)   { set_color(0x02, 0x00); }
-    else if(strcmp(args, "cyan") == 0)    { set_color(0x03, 0x00); }
-    else if(strcmp(args, "red") == 0)     { set_color(0x04, 0x00); }
-    else if(strcmp(args, "magenta") == 0) { set_color(0x05, 0x00); }
-    else if(strcmp(args, "brown") == 0)   { set_color(0x06, 0x00); }
-    else if(strcmp(args, "white") == 0)   { set_color(0x0F, 0x00); }
+    char *fg_str = args; // 0xF0 0xA0
+    char *bg_str = NULL;
+
+    for (int i = 0; args[i] != '\0'; i++) {
+        if (args[i] == ' ') {
+            args[i] = '\0';
+            bg_str = &args[i+1];
+            break;
+        }
+    }
+
+    if (bg_str == NULL || *bg_str == '\0') {
+        return;
+    }
+
+    uint8_t fg = (uint8_t)string_to_hex(fg_str);
+    uint8_t bg = (uint8_t)string_to_hex(bg_str);
+
+    set_color(fg, bg);
 }
 
 void cmd_peek(char *args) {
