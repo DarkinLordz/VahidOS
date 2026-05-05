@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 #include "kernel/io.h"
 
@@ -17,6 +18,7 @@ void scroll(void);
 void set_color(uint8_t fg, uint8_t bg);
 uint8_t get_color(void);
 void change_cursor(const char cursor);
+void blink(bool state);
 
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25

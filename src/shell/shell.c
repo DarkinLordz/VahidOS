@@ -1,7 +1,7 @@
 #include "shell/shell.h"
 
 void cmd_help(char *args) {
-    print_string("help\nclear\nhalt\nreboot\ncpuid\ncolor\npeek\ndump\ncursor\nrandom\npoke\n");
+    print_string("help\nclear\nhalt\nreboot\ncpuid\ncolor\npeek\ndump\ncursor\nrandom\npoke\nblink");
 }
 
 void cmd_clear(char *args) {
@@ -106,6 +106,14 @@ void cmd_dump(char *args) {
     }
 }
 
+void cmd_blink(char *args) {
+    if (!args || !*args) return;
+
+    bool state = string_to_hex(args);
+
+    blink(state);
+}
+
 void cmd_cursor(char *args) {
     if (!args || !*args) return;
 
@@ -138,7 +146,8 @@ shell_command_t commands[] = {
     {"dump",   cmd_dump},
     {"cursor", cmd_cursor},
     {"random", cmd_random},
-    {"poke",   cmd_poke}
+    {"poke",   cmd_poke},
+    {"blink", cmd_blink}
 };
 
 #define COMMAND_COUNT (sizeof(commands) / sizeof(shell_command_t))

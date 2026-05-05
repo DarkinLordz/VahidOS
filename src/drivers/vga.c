@@ -38,7 +38,15 @@ void scroll(void) {
 }
 
 void set_color(uint8_t fg, uint8_t bg) {
-    VGA_COLOR = fg | (bg << 4);
+    VGA_COLOR = (fg & 0x0F) | ((bg & 0x07) << 4); // We don't touch the 7th bit
+}
+
+void blink(bool state) {
+    if (state) {
+        VGA_COLOR |= (1 << 7);
+    } else {
+        VGA_COLOR &= ~(1 << 7);
+    }
 }
 
 uint8_t get_color(void) {
@@ -96,12 +104,9 @@ void change_cursor(const char cursor)
     cursor_start = cursor & 0x0F;
     cursor_end = cursor >> 4;
 
-    // Register 0x0A: Cursor Start (and Enable/Disable bit)
     outb(0x3D4, 0x0A);
-    // Bit 5 is the "Disable" bit. We force it to 0 to enable.
     outb(0x3D5, (inb(0x3D5) & 0xC0) | cursor_start);
 
-    // Register 0x0B is the cursor's ending
     outb(0x3D4, 0x0B);
     outb(0x3D5, (inb(0x3D5) & 0xE0) | cursor_end);
 
