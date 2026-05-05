@@ -1,7 +1,7 @@
 #include "shell/shell.h"
 
 void cmd_help(char *args) {
-    print_string("help\nclear\nhalt\nreboot\ncpuid\ncolor\npeek\ndump\ncursor\nrandom\npoke\nblink");
+    print_string("help\nclear\nhalt\ncpuid\ncolor\npeek\ndump\ncursor\nrandom\npoke\nblink");
 }
 
 void cmd_clear(char *args) {
@@ -12,14 +12,6 @@ void cmd_halt(char *args) {
     while(1) {
         __asm__ volatile("cli; hlt");
     }
-}
-
-void cmd_reboot(char *args) {
-    uint8_t good = 0x02;
-    while(good & 0x02) {
-        good = inb(0x64);
-    }
-    outb(0x64, 0xFE);
 }
 
 void cmd_cpuid(char *args) {
@@ -38,7 +30,7 @@ void cmd_cpuid(char *args) {
 void cmd_color(char *args) {
     if (!args || !*args) return;
 
-    char *fg_str = args; // 0xF0 0xA0
+    char *fg_str = args;
     char *bg_str = NULL;
 
     for (int i = 0; args[i] != '\0'; i++) {
@@ -139,7 +131,6 @@ shell_command_t commands[] = {
     {"help",   cmd_help},
     {"clear",  cmd_clear},
     {"halt",   cmd_halt},
-    {"reboot", cmd_reboot},
     {"cpuid",  cmd_cpuid},
     {"color",  cmd_color},
     {"peek",   cmd_peek},
