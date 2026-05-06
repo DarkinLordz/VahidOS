@@ -37,13 +37,13 @@ static const char SHIFT_MAP[128] = {
     [0x39] = ' ',
 };
 
-static const unsigned char EXTENDED_MAP[128] = { // We use unsigned char because the values can be larger than 8 bit
+static const unsigned char EXTENDED_MAP[128] = {
     [0x48] = ARROW_KEY_UP,
     [0x50] = ARROW_KEY_DOWN,
     [0x4B] = ARROW_KEY_LEFT,
     [0x4D] = ARROW_KEY_RIGHT,
-    [0x1C] = '\n', // Keypad Enter
-    [0x35] = '/',  // Keypad Divide
+    [0x1C] = '\n',
+    [0x35] = '/',
 };
 
 static char translate_scancode(uint8_t scancode) {
@@ -109,12 +109,4 @@ int keyboard_poll_char(char *out) {
 
     *out = translated;
     return 1;
-}
-
-char keyboard_getchar(void) {
-    char ch;
-    while (!keyboard_poll_char(&ch)) {
-        __asm__ volatile ("pause");
-    }
-    return ch;
 }
