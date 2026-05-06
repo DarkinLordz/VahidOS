@@ -169,16 +169,17 @@ void execute_command(char *input) {
 }
 
 void shell(void){
-    bool running = true;
     char input_buffer[64];
     int index = 0;
     char c;
 
+    keyboard_init();
+    clear();
     print_string("Welcome to Vahix Shell!\n");
     print_string("To see available commands, type 'help'\n");
     print_string("# ");
 
-    while(running){
+    while(1){
         if(keyboard_poll_char(&c)){
             if(c == '\n'){
                 print_character('\n');
