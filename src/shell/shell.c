@@ -208,3 +208,7 @@ void shell(void){
         __asm__ volatile("pause");
     }
 }
+int main() {
+    print_string("Hi");
+    return 0;
+}
