@@ -1,5 +1,7 @@
 # Vahix
 
+<!-- SPDX-License-Identifier: GPL-2.0-only -->
+
 ![Example](docs/image.png)
 
 ## Vahix is an experimental kernel.
@@ -24,3 +26,7 @@ Commands:
 - `make` builds `kernel.bin`
 - `make iso` creates `Vahix.iso`
 - `make clean` cleans binaries
+
+## License
+
+Vahix is licensed under GPLv2 only. See `LICENSE` for the full text.

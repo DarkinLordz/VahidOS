@@ -1,10 +1,17 @@
-#pragma once
+/* SPDX-License-Identifier: GPL-2.0-only */
+/* Copyright (C) 2026 Vahid Khalafov */
 
-#include <stdint.h>
-#include <stddef.h>
+#ifndef VAHIX_VGA_H
+#define VAHIX_VGA_H
+
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #include "kernel/io.h"
+
+#define VGA_WIDTH	80
+#define VGA_HEIGHT	25
 
 void new_line(void);
 void move_cursor(int direction);
@@ -17,8 +24,7 @@ void print_hex(uint32_t value);
 void scroll(void);
 void set_color(uint8_t fg, uint8_t bg);
 uint8_t get_color(void);
-void change_cursor(const char cursor);
+void change_cursor(const char cursor_shape);
 void blink(bool state);
 
-#define VGA_WIDTH 80
-#define VGA_HEIGHT 25
+#endif /* VAHIX_VGA_H */

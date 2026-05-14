@@ -1,10 +1,13 @@
-.set ALIGN,    1<<0
-.set MEMINFO,  1<<1
-.set FLAGS,    ALIGN | MEMINFO
-.set MAGIC,    0x1BADB002
+/* SPDX-License-Identifier: GPL-2.0-only */
+/* Copyright (C) 2026 Vahid Khalafov */
+
+.set ALIGN,	1 << 0
+.set MEMINFO,	1 << 1
+.set FLAGS,	ALIGN | MEMINFO
+.set MAGIC,	0x1badb002
 .set CHECKSUM, -(MAGIC + FLAGS)
 
-.section .multiboot,"a"
+.section .multiboot, "a"
 .align 4
 .long MAGIC
 .long FLAGS
@@ -21,12 +24,12 @@ stack_top:
 .extern kernel_main
 
 _start:
-    cli
-    mov $stack_top, %esp
-    call kernel_main
+	cli
+	mov $stack_top, %esp
+	call kernel_main
 
 hang:
-    hlt
-    jmp hang
+	hlt
+	jmp hang
 
-.section .note.GNU-stack,"",@progbits
+.section .note.GNU-stack, "", @progbits

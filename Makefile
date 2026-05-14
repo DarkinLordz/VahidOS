@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Copyright (C) 2026 Vahid Khalafov
+
 CC      := i686-elf-gcc
 LD      := i686-elf-gcc
 AS      := i686-elf-gcc
