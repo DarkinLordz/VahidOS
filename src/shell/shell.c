@@ -14,19 +14,6 @@ void cmd_halt(char *args) {
     }
 }
 
-void cmd_cpuid(char *args) {
-    static uint32_t regs[4];
-
-    __asm__ volatile("cpuid"
-        : "=a"(regs[3]), "=b"(regs[0]), "=d"(regs[1]), "=c"(regs[2])
-        : "a"(0));
-
-    char *vendor = (char *)regs;
-    vendor[12] = '\0';
-
-    print_string(vendor);
-}
-
 void cmd_color(char *args) {
     if (!args || !*args) return;
 
@@ -131,7 +118,6 @@ shell_command_t commands[] = {
     {"help",   cmd_help},
     {"clear",  cmd_clear},
     {"halt",   cmd_halt},
-    {"cpuid",  cmd_cpuid},
     {"color",  cmd_color},
     {"peek",   cmd_peek},
     {"dump",   cmd_dump},
