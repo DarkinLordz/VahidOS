@@ -1,26 +1,29 @@
+/* SPDX-License-Identifier: GPL-2.0-only */
+/* Copyright (C) 2026 Vahid Khalafov */
+
 ENTRY(_start)
 
 SECTIONS {
-    . = 1M;
+	. = 1M;
 
-    .multiboot : {
-        *(.multiboot)
-    }
+	.multiboot : {
+		*(.multiboot)
+	}
 
-    .text : {
-        *(.text*)
-    }
+	.text : {
+		*(.text*)
+	}
 
-    .rodata : {
-        *(.rodata*)
-    }
+	.rodata : {
+		*(.rodata*)
+	}
 
-    .data : {
-        *(.data*)
-    }
+	.data : {
+		*(.data*)
+	}
 
-    .bss : {
-        *(COMMON)
-        *(.bss*)
-    }
+	.bss : {
+		*(COMMON)
+		*(.bss*)
+	}
 }
