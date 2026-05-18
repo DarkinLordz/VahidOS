@@ -17,6 +17,5 @@
 void keyboard_init(void);
 int keyboard_poll_char(char *out);
 char keyboard_raw_read(void);
-char keyboard_getchar(void);
 
 #endif /* VAHIX_KEYBOARD_H */
