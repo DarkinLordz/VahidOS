@@ -40,6 +40,10 @@ iso: $(KERNEL)
 	cp $(KERNEL) iso/boot/kernel.bin
 	grub-mkrescue -o $(ISO) iso
 
+iso2: $(KERNEL)
+	cp $(KERNEL) iso/boot/kernel.bin
+	grub2-mkrescue -o $(ISO) iso
+
 clean:
 	rm -rf $(OBJDIR) $(KERNEL) $(ISO) iso/boot/kernel.bin
 
