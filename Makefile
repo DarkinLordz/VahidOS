@@ -38,7 +38,7 @@ $(KERNEL): $(OBJS) linker.ld
 
 iso: $(KERNEL)
 	cp $(KERNEL) iso/boot/kernel.bin
-	grub-mkrescue -o $(ISO) iso
+	grub2-mkrescue -o $(ISO) iso
 
 clean:
 	rm -rf $(OBJDIR) $(KERNEL) $(ISO) iso/boot/kernel.bin
