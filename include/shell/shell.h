@@ -12,6 +12,7 @@
 #include "kernel/io.h"
 #include "lib/random.h"
 #include "lib/string.h"
+#include "drivers/sound.h"
 
 void shell(void);
 

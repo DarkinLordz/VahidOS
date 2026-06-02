@@ -27,6 +27,12 @@ Commands:
 - `make iso` creates `Vahix.iso`
 - `make clean` cleans binaries
 
+## Advice
+
+If you're running QEMU, and want to have sound output:
+`qemu-system-x86_64 -audiodev pipewire,id=snd0 -machine pcspk-audiodev=snd0`
+These are the recommended flags if you are using pipewire with the `pcspk` driver, which is the only one currently supported. If you are using pulseaudio, you can replace `pipewire` with `pa` and it should work as well.
+
 ## License
 
 Vahix is licensed under GPLv2 only. See `LICENSE` for the full text.

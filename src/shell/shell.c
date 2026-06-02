@@ -170,6 +170,16 @@ static void cmd_random(char *args)
 	print_string(random_number_string);
 }
 
+static void cmd_beep(char *args)
+{
+    uint32_t freq = 440;
+    uint32_t dur  = 1000;
+
+	(void)args;
+
+    pc_speaker_beep(freq, dur);
+}
+
 struct shell_command {
 	const char *name;
 	void (*handler)(char *args);
@@ -186,6 +196,7 @@ static const struct shell_command commands[] = {
 	{ "random", cmd_random },
 	{ "poke", cmd_poke },
 	{ "blink", cmd_blink },
+	{ "beep", cmd_beep }
 };
 
 #define COMMAND_COUNT (sizeof(commands) / sizeof(commands[0]))
