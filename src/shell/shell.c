@@ -3,6 +3,8 @@
 
 #include "shell/shell.h"
 
+#define SHELL_INPUT_MAX 63
+
 static void cmd_help(char *args)
 {
 	(void)args;
@@ -221,9 +223,11 @@ static void execute_command(char *input)
 
 void shell(void)
 {
-	char input_buffer[64];
-	int index = 0;
-	char c;
+	char input_buffer[SHELL_INPUT_MAX + 1];
+	int length = 0;
+	int cursor_index = 0;
+	uint8_t key;
+	int i;
 
 	keyboard_init();
 	clear();
@@ -232,28 +236,70 @@ void shell(void)
 	print_string("# ");
 
 	while (1) {
-		if (keyboard_poll_char(&c)) {
-			if (c == '\n') {
+		if (keyboard_poll_char(&key)) {
+			if (key == '\n') {
+				if (cursor_index < length) {
+					move_cursor(length - cursor_index);
+				}
+
 				print_character('\n');
-				input_buffer[index] = '\0';
+				input_buffer[length] = '\0';
 
 				execute_command(input_buffer);
 
-				index = 0;
+				length = 0;
+				cursor_index = 0;
 				print_string("\n# ");
 				continue;
-			} else if (c == '\b') {
-				if (index > 0) {
-					index--;
-					input_buffer[index] = '\0';
-					print_character('\b');
+			} else if (key == '\b') {
+				if (cursor_index > 0) {
+					cursor_index--;
+					length--;
+
+
+					for (i = cursor_index; i < length; i++) {
+						input_buffer[i] = input_buffer[i + 1];
+					}
+
+					input_buffer[length] = '\0';
+
+					move_cursor(-1);
+					for (i = cursor_index; i < length; i++) {
+						print_character(input_buffer[i]);
+					}
+					print_character(' ');
+					move_cursor(-(length - cursor_index + 1));
 				}
+			} else if (key == ARROW_KEY_LEFT) {
+				if (cursor_index > 0) {
+					cursor_index--;
+					move_cursor(-1);
+				}
+			} else if (key == ARROW_KEY_RIGHT) {
+				if (cursor_index < length) {
+					cursor_index++;
+					move_cursor(1);
+				}
+			} else if (key == ARROW_KEY_UP || key == ARROW_KEY_DOWN) {
+				continue;
 			} else {
-				if (index < 63) {
-					print_character(c);
-					input_buffer[index] = c;
-					index++;
-					input_buffer[index] = '\0';
+				if (length < SHELL_INPUT_MAX) {
+					for (i = length; i > cursor_index; i--) {
+						input_buffer[i] = input_buffer[i - 1];
+					}
+
+					input_buffer[cursor_index] = (char)key;
+					length++;
+					input_buffer[length] = '\0';
+
+					for (i = cursor_index; i < length; i++) {
+						print_character(input_buffer[i]);
+					}
+
+					cursor_index++;
+					if (cursor_index < length) {
+						move_cursor(-(length - cursor_index));
+					}
 				}
 			}
 		}

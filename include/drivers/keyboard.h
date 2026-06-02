@@ -15,7 +15,7 @@
 #define ARROW_KEY_RIGHT		((uint8_t)0x83)
 
 void keyboard_init(void);
-int keyboard_poll_char(char *out);
-char keyboard_raw_read(void);
+int keyboard_poll_char(uint8_t *out);
+uint8_t keyboard_raw_read(void);
 
 #endif /* VAHIX_KEYBOARD_H */

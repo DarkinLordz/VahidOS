@@ -55,7 +55,7 @@ static const uint8_t extended_map[128] = {
 	[0x35] = '/',
 };
 
-static char translate_scancode(uint8_t scancode)
+static uint8_t translate_scancode(uint8_t scancode)
 {
 	const char *map;
 
@@ -76,13 +76,14 @@ static char translate_scancode(uint8_t scancode)
 void keyboard_init(void)
 {
 	shift_active = false;
+	is_extended = false;
 
 	while (inb(KEYBOARD_STATUS_PORT) & KEYBOARD_STATUS_OUT_READY) {
 		(void)inb(KEYBOARD_DATA_PORT);
 	}
 }
 
-char keyboard_raw_read(void)
+uint8_t keyboard_raw_read(void)
 {
 	if (!(inb(KEYBOARD_STATUS_PORT) & KEYBOARD_STATUS_OUT_READY)) {
 		return 0;
@@ -91,10 +92,14 @@ char keyboard_raw_read(void)
 	return inb(KEYBOARD_DATA_PORT);
 }
 
-int keyboard_poll_char(char *out)
+int keyboard_poll_char(uint8_t *out)
 {
 	uint8_t scancode;
-	char translated;
+	uint8_t translated;
+
+	if (!(inb(KEYBOARD_STATUS_PORT) & KEYBOARD_STATUS_OUT_READY)) {
+		return 0;
+	}
 
 	scancode = keyboard_raw_read();
 
