@@ -9,8 +9,8 @@ static void cmd_help(char *args)
 {
 	(void)args;
 
-	print_string("help\nclear\nhalt\ncpuid\ncolor\npeek\n"
-		"dump\ncursor\nrandom\npoke\nblink");
+	print_string("help\nclear\nhalt\ncolor\npeek\n"
+		"dump\ncursor\nrandom\npoke\nblink\nbeep");
 }
 
 static void cmd_clear(char *args)
