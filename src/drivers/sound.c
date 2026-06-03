@@ -1,3 +1,6 @@
+/* SPDX-License-Identifier: GPL-2.0-only */
+/* Copyright (C) 2026 Vahid Khalafov */
+
 #include "drivers/sound.h"
 
 void delay_ms(uint32_t ms)
