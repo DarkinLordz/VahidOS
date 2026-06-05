@@ -83,20 +83,30 @@ void vi_run(void)
                 }
             }
             else if(editor.mode == Insert) {
-                if(editor.buffer_len < 1023) {
-                    editor.buffer[editor.buffer_len] = (char)key;
-                    editor.buffer_len++;
-                    editor.buffer[editor.buffer_len] = '\0';
+                if(key == '\t') {
+                    print_string("    ");
+                    editor.cursor.x += 4;
                 }
-                print_character(key);
-                if(key == '\b') {
+                else if(key == '\b') {
                     if(editor.cursor.x > 0) {
                         editor.cursor.x--;
+                        set_cursor(editor.cursor.y * VGA_WIDTH + editor.cursor.x);
+                        print_character(' ');
+                        set_cursor(editor.cursor.y * VGA_WIDTH + editor.cursor.x);
                     }
-                } else if(key == '\n') {
+                }
+                else if(key == '\n') {
+                    print_character('\n');
                     editor.cursor.x = 0;
                     editor.cursor.y++;
                 } else {
+                    if(editor.buffer_len < 1023) {
+                        editor.buffer[editor.buffer_len] = (char)key;
+                        editor.buffer_len++;
+                        editor.buffer[editor.buffer_len] = '\0';
+                    }
+
+                    print_character(key);
                     editor.cursor.x++;
                 }
             }
@@ -110,7 +120,7 @@ static void display_mode(Mode mode, Cursor cursor)
     set_cursor((VGA_HEIGHT -1) * VGA_WIDTH);
 
     if(mode == Normal) {
-        print_string("-- NORMAL -- ");
+        print_string("-- NORMAL --");
     } else {
         print_string("-- INSERT --");
     }
