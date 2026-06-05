@@ -41,16 +41,41 @@ void vi_run(void)
             if(key == 'q') {
                 break;
             }
-            else if(key == 'i') {
-                editor.mode = Insert;
-            } else if(key == ' ') {
+            else if(key == ' ') {
                 editor.mode = Normal;
+            } else if(key == ARROW_KEY_LEFT) {
+                if(editor.cursor.x > 0) {
+                    editor.cursor.x--;
+                }
+            } else if(key == ARROW_KEY_DOWN) {
+                editor.cursor.y++;
+            } else if(key == ARROW_KEY_UP) {
+                if(editor.cursor.y > 0) {
+                    editor.cursor.y--;
+                }
+            } else if(key == ARROW_KEY_RIGHT) {
+                editor.cursor.x++;
             }
-        }
-        if(editor.mode == Normal) {
-            print_string("NORMAL");
-        } else if(editor.mode == Insert) {
-            print_string("INSERT");
+            else if(editor.mode == Normal) {
+                if(key == 'i')
+                {
+                    editor.mode = Insert;
+                } else if(key == 'h') {
+                    if(editor.cursor.x > 0) {
+                        editor.cursor.x--;
+                    }
+                }
+                else if(key == 'j') {
+                    editor.cursor.y++;
+                } else if(key == 'k') {
+                    if(editor.cursor.y > 0) {
+                        editor.cursor.y--;
+                    }
+                }
+                else if(key == 'l') {
+                    editor.cursor.x++;
+                }
+            }
         }
 
         asm volatile("pause");
