@@ -1,12 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /* Copyright (C) 2026 Vahid Khalafov */
 
-#include <stdbool.h>
-#include <stdint.h>
-
-#include "drivers/vga.h"
 #include "shell/vi.h"
-#include "drivers/keyboard.h"
 
 typedef enum {
     Normal,
@@ -21,6 +16,8 @@ typedef struct {
 typedef struct {
     Cursor cursor;
     Mode mode;
+    char buffer[1024];
+    uint16_t buffer_len;
 } Editor;
 
 void vi_run(void)
@@ -32,16 +29,15 @@ void vi_run(void)
     editor.cursor.x = 0;
     editor.cursor.y = 0;
     editor.mode = Normal;
+    editor.buffer[0] = '\0';
+    editor.buffer_len = 0;
 
     uint8_t key;
 
     while(true) {
         set_cursor(editor.cursor.y * VGA_WIDTH + editor.cursor.x);
         if(keyboard_poll_char(&key)) {
-            if(key == 'q') {
-                break;
-            }
-            else if(key == ' ') {
+            if(key == '\t') {
                 editor.mode = Normal;
             } else if(key == ARROW_KEY_LEFT) {
                 if(editor.cursor.x > 0) {
@@ -57,7 +53,10 @@ void vi_run(void)
                 editor.cursor.x++;
             }
             else if(editor.mode == Normal) {
-                if(key == 'i')
+                if(key == 'q') {
+                    break;
+                }
+                else if(key == 'i')
                 {
                     editor.mode = Insert;
                 } else if(key == 'h') {
@@ -75,6 +74,15 @@ void vi_run(void)
                 else if(key == 'l') {
                     editor.cursor.x++;
                 }
+            }
+            else if(editor.mode == Insert) {
+                if(editor.buffer_len < 1023) {
+                    editor.buffer[editor.buffer_len] = (char)key;
+                    editor.buffer_len++;
+                    editor.buffer[editor.buffer_len] = '\0';
+                }
+                print_character(key);
+                editor.cursor.x++;
             }
         }
 
