@@ -20,6 +20,8 @@ typedef struct {
     uint16_t buffer_len;
 } Editor;
 
+static void display_mode(Mode mode, Cursor cursor);
+
 void vi_run(void)
 {
     clear();
@@ -34,11 +36,15 @@ void vi_run(void)
 
     uint8_t key;
 
+    display_mode(editor.mode, editor.cursor);
+
     while(true) {
         set_cursor(editor.cursor.y * VGA_WIDTH + editor.cursor.x);
+        
         if(keyboard_poll_char(&key)) {
             if(key == '\x1b') {
                 editor.mode = Normal;
+                display_mode(editor.mode, editor.cursor);
             } else if(key == ARROW_KEY_LEFT) {
                 if(editor.cursor.x > 0) {
                     editor.cursor.x--;
@@ -59,6 +65,7 @@ void vi_run(void)
                 else if(key == 'i')
                 {
                     editor.mode = Insert;
+                    display_mode(editor.mode, editor.cursor);
                 } else if(key == 'h') {
                     if(editor.cursor.x > 0) {
                         editor.cursor.x--;
@@ -97,4 +104,16 @@ void vi_run(void)
 
         asm volatile("pause");
     }
+}
+static void display_mode(Mode mode, Cursor cursor)
+{
+    set_cursor((VGA_HEIGHT -1) * VGA_WIDTH);
+
+    if(mode == Normal) {
+        print_string("-- NORMAL -- ");
+    } else {
+        print_string("-- INSERT --");
+    }
+
+    set_cursor(cursor.y * VGA_WIDTH + cursor.x);
 }
