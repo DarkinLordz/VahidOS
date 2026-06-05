@@ -13,6 +13,7 @@
 #include "lib/random.h"
 #include "lib/string.h"
 #include "drivers/sound.h"
+#include "shell/vi.h"
 
 void shell(void);
 

@@ -2,7 +2,6 @@
 /* Copyright (C) 2026 Vahid Khalafov */
 
 #include "shell/shell.h"
-#include "shell/vi.h"
 
 #define SHELL_INPUT_MAX 63
 
@@ -180,6 +179,7 @@ static void cmd_beep(char *args)
 
     pc_speaker_beep(freq, dur);
 }
+
 static void cmd_vi(char *args)
 {
 	(void)args;
@@ -204,7 +204,7 @@ static const struct shell_command commands[] = {
 	{ "poke", cmd_poke },
 	{ "blink", cmd_blink },
 	{ "beep", cmd_beep },
-	{ "vi", cmd_vi},
+	{ "vi", cmd_vi}
 };
 
 #define COMMAND_COUNT (sizeof(commands) / sizeof(commands[0]))

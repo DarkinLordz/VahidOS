@@ -16,11 +16,22 @@ typedef struct {
 typedef struct {
     Cursor cursor;
     Mode mode;
-    char buffer[1024];
+    char buffer[1920]; /* 80 chars * 24 lines */
     uint16_t buffer_len;
 } Editor;
 
-static void display_mode(Mode mode, Cursor cursor);
+static void display_mode(Mode mode, Cursor cursor)
+{
+    set_cursor((VGA_HEIGHT -1) * VGA_WIDTH);
+
+    if(mode == Normal) {
+        print_string("-- NORMAL --");
+    } else {
+        print_string("-- INSERT --");
+    }
+
+    set_cursor(cursor.y * VGA_WIDTH + cursor.x);
+}
 
 void vi_run(void)
 {
@@ -100,7 +111,7 @@ void vi_run(void)
                     editor.cursor.x = 0;
                     editor.cursor.y++;
                 } else {
-                    if(editor.buffer_len < 1023) {
+                    if(editor.buffer_len < 1919) {
                         editor.buffer[editor.buffer_len] = (char)key;
                         editor.buffer_len++;
                         editor.buffer[editor.buffer_len] = '\0';
@@ -114,16 +125,4 @@ void vi_run(void)
 
         asm volatile("pause");
     }
-}
-static void display_mode(Mode mode, Cursor cursor)
-{
-    set_cursor((VGA_HEIGHT -1) * VGA_WIDTH);
-
-    if(mode == Normal) {
-        print_string("-- NORMAL --");
-    } else {
-        print_string("-- INSERT --");
-    }
-
-    set_cursor(cursor.y * VGA_WIDTH + cursor.x);
 }
