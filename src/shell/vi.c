@@ -86,6 +86,9 @@ void vi_run(void)
                     if(editor.cursor.x > 0) {
                         editor.cursor.x--;
                     }
+                } else if(key == '\n') {
+                    editor.cursor.x = 0;
+                    editor.cursor.y++;
                 } else {
                     editor.cursor.x++;
                 }
