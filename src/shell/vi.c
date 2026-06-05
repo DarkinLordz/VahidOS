@@ -8,6 +8,11 @@
 #include "shell/vi.h"
 #include "drivers/keyboard.h"
 
+typedef enum {
+    Normal,
+    Insert,
+} Mode;
+
 typedef struct {
     uint16_t x;
     uint16_t y;
@@ -15,6 +20,7 @@ typedef struct {
 
 typedef struct {
     Cursor cursor;
+    Mode mode;
 } Editor;
 
 void vi_run(void)
@@ -25,6 +31,7 @@ void vi_run(void)
 
     editor.cursor.x = 0;
     editor.cursor.y = 0;
+    editor.mode = Normal;
 
     uint8_t key;
 
@@ -34,6 +41,16 @@ void vi_run(void)
             if(key == 'q') {
                 break;
             }
+            else if(key == 'i') {
+                editor.mode = Insert;
+            } else if(key == ' ') {
+                editor.mode = Normal;
+            }
+        }
+        if(editor.mode == Normal) {
+            print_string("NORMAL");
+        } else if(editor.mode == Insert) {
+            print_string("INSERT");
         }
 
         asm volatile("pause");
