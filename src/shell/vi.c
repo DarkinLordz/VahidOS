@@ -50,9 +50,10 @@ void vi_run(void)
     display_mode(editor.mode, editor.cursor);
 
     while(true) {
+
         set_cursor(editor.cursor.y * VGA_WIDTH + editor.cursor.x);
         
-        if(keyboard_poll_char(&key)) {
+        if (keyboard_poll_char(&key)) {
             if(key == '\x1b') {
                 editor.mode = Normal;
                 display_mode(editor.mode, editor.cursor);
@@ -73,33 +74,32 @@ void vi_run(void)
                 if(key == 'q') {
                     break;
                 }
-                else if(key == 'i')
-                {
+                else if (key == 'i') {
                     editor.mode = Insert;
                     display_mode(editor.mode, editor.cursor);
-                } else if(key == 'h') {
-                    if(editor.cursor.x > 0) {
+                } else if (key == 'h') {
+                    if (editor.cursor.x > 0) {
                         editor.cursor.x--;
                     }
                 }
-                else if(key == 'j' && editor.cursor.y < 23) {
+                else if (key == 'j' && editor.cursor.y < 23) {
                     editor.cursor.y++;
-                } else if(key == 'k') {
-                    if(editor.cursor.y > 0) {
+                } else if (key == 'k') {
+                    if (editor.cursor.y > 0) {
                         editor.cursor.y--;
                     }
                 }
-                else if(key == 'l') {
+                else if (key == 'l') {
                     editor.cursor.x++;
                 }
             }
-            else if(editor.mode == Insert) {
-                if(key == '\t') {
+            else if (editor.mode == Insert) {
+                if (key == '\t') {
                     print_string("    ");
                     editor.cursor.x += 4;
                 }
-                else if(key == '\b') {
-                    if(editor.cursor.x > 0) {
+                else if (key == '\b') {
+                    if (editor.cursor.x > 0) {
                         editor.cursor.x--;
                         set_cursor(editor.cursor.y * VGA_WIDTH + editor.cursor.x);
                         print_character(' ');
