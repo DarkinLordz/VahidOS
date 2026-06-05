@@ -45,7 +45,7 @@ void scroll(void)
 	for (i = (VGA_HEIGHT - 1) * VGA_WIDTH;
 	     i < VGA_HEIGHT * VGA_WIDTH;
 	     i++) {
-		vga_buffer[i] = (uint16_t)' ' | ((uint16_t)vga_color << 8);
+		write_cell(i / VGA_WIDTH, i % VGA_WIDTH, ' ', vga_color);
 	}
 
 	cursor_pos = (VGA_HEIGHT - 1) * VGA_WIDTH;
@@ -62,7 +62,7 @@ void write_cell(size_t row, size_t col, char character, uint8_t color)
 {
 	if (row < VGA_HEIGHT && col < VGA_WIDTH) {
 		size_t index = row * VGA_WIDTH + col;
-        vga_buffer[index] = (uint16_t)character | ((uint16_t)color << 8);
+		vga_buffer[index] = (uint16_t)character | ((uint16_t)color << 8);
 	}
 }
 
@@ -85,7 +85,7 @@ void clear(void)
 	size_t i;
 
 	for (i = 0; i < VGA_WIDTH * VGA_HEIGHT; i++) {
-		vga_buffer[i] = (uint16_t)' ' | ((uint16_t)vga_color << 8);
+		write_cell(i / VGA_WIDTH, i % VGA_WIDTH, ' ', vga_color);
 	}
 
 	cursor_pos = 0;
@@ -101,14 +101,14 @@ void print_character(const char character)
 	if (character == '\b') {
 		if (cursor_pos > 0) {
 			move_cursor(-1);
-			vga_buffer[cursor_pos] =
-				(uint16_t)' ' | ((uint16_t)vga_color << 8);
+			write_cell(cursor_pos / VGA_WIDTH,
+				   cursor_pos % VGA_WIDTH, ' ', vga_color);
 		}
 	} else if (character == '\n') {
 		new_line();
 	} else {
-		vga_buffer[cursor_pos] =
-			(uint16_t)character | ((uint16_t)vga_color << 8);
+		write_cell(cursor_pos / VGA_WIDTH, cursor_pos % VGA_WIDTH,
+			   character, vga_color);
 		move_cursor(1);
 	}
 }
