@@ -37,7 +37,7 @@ void vi_run(void)
     while(true) {
         set_cursor(editor.cursor.y * VGA_WIDTH + editor.cursor.x);
         if(keyboard_poll_char(&key)) {
-            if(key == '\t') {
+            if(key == '\x1b') {
                 editor.mode = Normal;
             } else if(key == ARROW_KEY_LEFT) {
                 if(editor.cursor.x > 0) {
