@@ -82,7 +82,13 @@ void vi_run(void)
                     editor.buffer[editor.buffer_len] = '\0';
                 }
                 print_character(key);
-                editor.cursor.x++;
+                if(key == '\b') {
+                    if(editor.cursor.x > 0) {
+                        editor.cursor.x--;
+                    }
+                } else {
+                    editor.cursor.x++;
+                }
             }
         }
 
