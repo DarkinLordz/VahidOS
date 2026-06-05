@@ -58,6 +58,14 @@ void set_color(uint8_t fg, uint8_t bg)
 	vga_color = (fg & 0x0f) | ((bg & 0x07) << 4);
 }
 
+void write_cell(size_t row, size_t col, char character, uint8_t color)
+{
+	if (row < VGA_HEIGHT && col < VGA_WIDTH) {
+		size_t index = row * VGA_WIDTH + col;
+        vga_buffer[index] = (uint16_t)character | ((uint16_t)color << 8);
+	}
+}
+
 void blink(bool state)
 {
 	if (state) {

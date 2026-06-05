@@ -26,5 +26,6 @@ void set_color(uint8_t fg, uint8_t bg);
 uint8_t get_color(void);
 void change_cursor(const char cursor_shape);
 void blink(bool state);
+void write_cell(size_t row, size_t col, char character, uint8_t color);
 
 #endif /* VAHIX_VGA_H */
