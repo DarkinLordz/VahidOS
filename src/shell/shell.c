@@ -2,6 +2,7 @@
 /* Copyright (C) 2026 Vahid Khalafov */
 
 #include "shell/shell.h"
+#include "shell/vi.h"
 
 #define SHELL_INPUT_MAX 63
 
@@ -10,7 +11,7 @@ static void cmd_help(char *args)
 	(void)args;
 
 	print_string("help\nclear\nhalt\ncolor\npeek\n"
-		"dump\ncursor\nrandom\npoke\nblink\nbeep");
+		"dump\ncursor\nrandom\npoke\nblink\nbeep\nvi");
 }
 
 static void cmd_clear(char *args)
@@ -179,6 +180,12 @@ static void cmd_beep(char *args)
 
     pc_speaker_beep(freq, dur);
 }
+static void cmd_vi(char *args)
+{
+	(void)args;
+
+	vi_run();
+}
 
 struct shell_command {
 	const char *name;
@@ -196,7 +203,8 @@ static const struct shell_command commands[] = {
 	{ "random", cmd_random },
 	{ "poke", cmd_poke },
 	{ "blink", cmd_blink },
-	{ "beep", cmd_beep }
+	{ "beep", cmd_beep },
+	{ "vi", cmd_vi},
 };
 
 #define COMMAND_COUNT (sizeof(commands) / sizeof(commands[0]))
