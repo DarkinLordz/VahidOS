@@ -49,7 +49,7 @@ void vi_run(void)
                 if(editor.cursor.x > 0) {
                     editor.cursor.x--;
                 }
-            } else if(key == ARROW_KEY_DOWN) {
+            } else if(key == ARROW_KEY_DOWN && editor.cursor.y < 23) {
                 editor.cursor.y++;
             } else if(key == ARROW_KEY_UP) {
                 if(editor.cursor.y > 0) {
@@ -71,7 +71,7 @@ void vi_run(void)
                         editor.cursor.x--;
                     }
                 }
-                else if(key == 'j') {
+                else if(key == 'j' && editor.cursor.y < 23) {
                     editor.cursor.y++;
                 } else if(key == 'k') {
                     if(editor.cursor.y > 0) {
@@ -95,7 +95,7 @@ void vi_run(void)
                         set_cursor(editor.cursor.y * VGA_WIDTH + editor.cursor.x);
                     }
                 }
-                else if(key == '\n') {
+                else if(key == '\n' && editor.cursor.y < 23) {
                     print_character('\n');
                     editor.cursor.x = 0;
                     editor.cursor.y++;
