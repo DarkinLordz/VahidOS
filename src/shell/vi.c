@@ -77,7 +77,12 @@ void vi_run(void)
                 else if (key == 'i') {
                     editor.mode = Insert;
                     display_mode(editor.mode, editor.cursor);
-                } else if (key == 'h') {
+                } else if (key == 'a') {
+                    editor.cursor.x++;
+                    editor.mode = Insert;
+                    display_mode(editor.mode, editor.cursor);
+                }
+                else if (key == 'h') {
                     if (editor.cursor.x > 0) {
                         editor.cursor.x--;
                     }
