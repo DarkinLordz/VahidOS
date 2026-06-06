@@ -113,6 +113,9 @@ void vi_run(void)
                 }
                 else if(key == '\n' && editor.cursor.y < 23) {
                     print_character('\n');
+                    editor.buffer[editor.buffer_len] = '\n';
+                    editor.buffer_len++;
+                    editor.buffer[editor.buffer_len] = '\0';
                     editor.cursor.x = 0;
                     editor.cursor.y++;
                 } else {
