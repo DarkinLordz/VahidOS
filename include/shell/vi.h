@@ -8,7 +8,6 @@
 #include <stdint.h>
 
 #include "drivers/vga.h"
-#include "shell/vi.h"
 #include "drivers/keyboard.h"
 
 void vi_run(void);

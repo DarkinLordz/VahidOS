@@ -3,134 +3,235 @@
 
 #include "shell/vi.h"
 
+#define VI_STATUS_ROW		(VGA_HEIGHT - 1)
+#define VI_TEXT_HEIGHT		(VGA_HEIGHT - 1)
+#define VI_BUFFER_SIZE		(VGA_WIDTH * VI_TEXT_HEIGHT)
+#define VI_TAB_WIDTH		4
+
 typedef enum {
-    Normal,
-    Insert,
+	MODE_NORMAL,
+	MODE_INSERT,
 } Mode;
 
 typedef struct {
-    uint16_t x;
-    uint16_t y;
+	uint16_t x;
+	uint16_t y;
 } Cursor;
 
 typedef struct {
-    Cursor cursor;
-    Mode mode;
-    char buffer[1920]; /* 80 chars * 24 lines */
-    uint16_t buffer_len;
+	Cursor cursor;
+	Mode mode;
+	char buffer[VI_BUFFER_SIZE];
 } Editor;
 
-static void display_mode(Mode mode, Cursor cursor)
+static size_t cursor_index(Cursor cursor)
 {
-    set_cursor((VGA_HEIGHT -1) * VGA_WIDTH);
+	return cursor.y * VGA_WIDTH + cursor.x;
+}
 
-    if(mode == Normal) {
-        print_string("-- NORMAL --");
+static void set_editor_cursor(const Editor *editor)
+{
+	set_cursor((int)cursor_index(editor->cursor));
+}
+
+static void clear_status(void)
+{
+	size_t i;
+
+	for (i = 0; i < VGA_WIDTH; i++) {
+		write_cell(VI_STATUS_ROW, i, ' ', get_color());
+	}
+}
+
+static void display_mode(const Editor *editor)
+{
+	const char *label;
+
+	label = editor->mode == MODE_NORMAL ? "-- NORMAL --" : "-- INSERT --";
+
+	clear_status();
+	set_cursor(VI_STATUS_ROW * VGA_WIDTH);
+	print_string(label);
+	set_editor_cursor(editor);
+}
+
+static void init_editor(Editor *editor)
+{
+	size_t i;
+
+	editor->cursor.x = 0;
+	editor->cursor.y = 0;
+	editor->mode = MODE_NORMAL;
+
+	for (i = 0; i < VI_BUFFER_SIZE; i++) {
+		editor->buffer[i] = ' ';
+	}
+}
+
+static bool move_left(Cursor *cursor)
+{
+	if (cursor->x == 0) {
+		return false;
+	}
+
+	cursor->x--;
+	return true;
+}
+
+static bool move_right(Cursor *cursor)
+{
+	if (cursor->x >= VGA_WIDTH - 1) {
+		return false;
+	}
+
+	cursor->x++;
+	return true;
+}
+
+static bool move_up(Cursor *cursor)
+{
+	if (cursor->y == 0) {
+		return false;
+	}
+
+	cursor->y--;
+	return true;
+}
+
+static bool move_down(Cursor *cursor)
+{
+	if (cursor->y >= VI_TEXT_HEIGHT - 1) {
+		return false;
+	}
+
+	cursor->y++;
+	return true;
+}
+
+static void move_next(Cursor *cursor)
+{
+	if (move_right(cursor)) {
+		return;
+	}
+
+	if (cursor->y < VI_TEXT_HEIGHT - 1) {
+		cursor->x = 0;
+		cursor->y++;
+	}
+}
+
+static void handle_move(Editor *editor, uint8_t key)
+{
+	if (key == ARROW_KEY_LEFT || key == 'h') {
+		move_left(&editor->cursor);
+	} else if (key == ARROW_KEY_RIGHT || key == 'l') {
+		move_right(&editor->cursor);
+	} else if (key == ARROW_KEY_UP || key == 'k') {
+		move_up(&editor->cursor);
+	} else if (key == ARROW_KEY_DOWN || key == 'j') {
+		move_down(&editor->cursor);
+	}
+}
+
+static void put_editor_char(Editor *editor, char character)
+{
+	editor->buffer[cursor_index(editor->cursor)] = character;
+	write_cell(editor->cursor.y, editor->cursor.x, character, get_color());
+	move_next(&editor->cursor);
+}
+
+static void insert_tab(Editor *editor)
+{
+	uint8_t i;
+
+	for (i = 0; i < VI_TAB_WIDTH; i++) {
+		put_editor_char(editor, ' ');
+	}
+}
+
+static void insert_backspace(Editor *editor)
+{
+	if (!move_left(&editor->cursor)) {
+		return;
+	}
+
+	editor->buffer[cursor_index(editor->cursor)] = ' ';
+	write_cell(editor->cursor.y, editor->cursor.x, ' ', get_color());
+}
+
+static void insert_newline(Editor *editor)
+{
+	if (editor->cursor.y >= VI_TEXT_HEIGHT - 1) {
+		return;
+	}
+
+	editor->cursor.x = 0;
+	editor->cursor.y++;
+}
+
+static bool handle_normal(Editor *editor, uint8_t key)
+{
+	if (key == 'q') {
+		return false;
+	}
+
+	if (key == 'i') {
+		editor->mode = MODE_INSERT;
+		display_mode(editor);
+	} else if (key == 'a') {
+		move_right(&editor->cursor);
+		editor->mode = MODE_INSERT;
+		display_mode(editor);
+	} else if (key == 'x') {
+        editor->buffer[cursor_index(editor->cursor)] = ' ';
+	    write_cell(editor->cursor.y, editor->cursor.x, ' ', get_color());
     } else {
-        print_string("-- INSERT --");
-    }
+		handle_move(editor, key);
+	}
 
-    set_cursor(cursor.y * VGA_WIDTH + cursor.x);
+	return true;
+}
+
+static void handle_insert(Editor *editor, uint8_t key)
+{
+	if (key == '\t') {
+		insert_tab(editor);
+	} else if (key == '\b') {
+		insert_backspace(editor);
+	} else if (key == '\n') {
+		insert_newline(editor);
+	} else if (key >= ' ') { /* Printable characters only :) */
+		put_editor_char(editor, (char)key);
+	}
 }
 
 void vi_run(void)
 {
-    clear();
+	Editor editor;
+	uint8_t key;
 
-    Editor editor;
+	clear();
+	init_editor(&editor);
+	display_mode(&editor);
 
-    editor.cursor.x = 0;
-    editor.cursor.y = 0;
-    editor.mode = Normal;
-    editor.buffer[0] = '\0';
-    editor.buffer_len = 0;
+	while (true) {
+		set_editor_cursor(&editor);
 
-    uint8_t key;
+		if (keyboard_poll_char(&key)) {
+			if (key == '\x1b') {
+				editor.mode = MODE_NORMAL;
+				display_mode(&editor);
+			} else if (key >= ARROW_KEY_UP && key <= ARROW_KEY_RIGHT) {
+				handle_move(&editor, key);
+			} else if (editor.mode == MODE_NORMAL) {
+				if (!handle_normal(&editor, key)) {
+					break;
+				}
+			} else {
+				handle_insert(&editor, key);
+			}
+		}
 
-    display_mode(editor.mode, editor.cursor);
-
-    while(true) {
-
-        set_cursor(editor.cursor.y * VGA_WIDTH + editor.cursor.x);
-        
-        if (keyboard_poll_char(&key)) {
-            if(key == '\x1b') {
-                editor.mode = Normal;
-                display_mode(editor.mode, editor.cursor);
-            } else if(key == ARROW_KEY_LEFT) {
-                if(editor.cursor.x > 0) {
-                    editor.cursor.x--;
-                }
-            } else if(key == ARROW_KEY_DOWN && editor.cursor.y < 23) {
-                editor.cursor.y++;
-            } else if(key == ARROW_KEY_UP) {
-                if(editor.cursor.y > 0) {
-                    editor.cursor.y--;
-                }
-            } else if(key == ARROW_KEY_RIGHT) {
-                editor.cursor.x++;
-            }
-            else if(editor.mode == Normal) {
-                if(key == 'q') {
-                    break;
-                }
-                else if (key == 'i') {
-                    editor.mode = Insert;
-                    display_mode(editor.mode, editor.cursor);
-                } else if (key == 'a') {
-                    editor.cursor.x++;
-                    editor.mode = Insert;
-                    display_mode(editor.mode, editor.cursor);
-                }
-                else if (key == 'h') {
-                    if (editor.cursor.x > 0) {
-                        editor.cursor.x--;
-                    }
-                }
-                else if (key == 'j' && editor.cursor.y < 23) {
-                    editor.cursor.y++;
-                } else if (key == 'k') {
-                    if (editor.cursor.y > 0) {
-                        editor.cursor.y--;
-                    }
-                }
-                else if (key == 'l') {
-                    editor.cursor.x++;
-                }
-            }
-            else if (editor.mode == Insert) {
-                if (key == '\t') {
-                    print_string("    ");
-                    editor.cursor.x += 4;
-                }
-                else if (key == '\b') {
-                    if (editor.cursor.x > 0) {
-                        editor.cursor.x--;
-                        set_cursor(editor.cursor.y * VGA_WIDTH + editor.cursor.x);
-                        print_character(' ');
-                        set_cursor(editor.cursor.y * VGA_WIDTH + editor.cursor.x);
-                    }
-                }
-                else if(key == '\n' && editor.cursor.y < 23) {
-                    print_character('\n');
-                    editor.buffer[editor.buffer_len] = '\n';
-                    editor.buffer_len++;
-                    editor.buffer[editor.buffer_len] = '\0';
-                    editor.cursor.x = 0;
-                    editor.cursor.y++;
-                } else {
-                    if(editor.buffer_len < 1919) {
-                        editor.buffer[editor.buffer_len] = (char)key;
-                        editor.buffer_len++;
-                        editor.buffer[editor.buffer_len] = '\0';
-                    }
-
-                    print_character(key);
-                    editor.cursor.x++;
-                }
-            }
-        }
-
-        asm volatile("pause");
-    }
+		asm volatile("pause");
+	}
 }
