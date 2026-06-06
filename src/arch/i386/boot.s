@@ -32,4 +32,4 @@ hang:
 	hlt
 	jmp hang
 
-.section .note.GNU-stack, "", @progbits
+.section .note.GNU-stack, ""
