@@ -18,7 +18,7 @@ DEPS    := $(OBJS:.o=.d)
 KERNEL  := kernel.bin
 ISO     := Vahix.iso
 
-.PHONY: all clean iso
+.PHONY: all clean iso run
 
 all: $(KERNEL)
 
@@ -42,5 +42,8 @@ iso: $(KERNEL)
 
 clean:
 	rm -rf $(OBJDIR) $(KERNEL) $(ISO) iso/boot/kernel.bin
+
+run: iso
+	qemu-system-i386 -audiodev pipewire,id=snd0 -machine pcspk-audiodev=snd0 -enable-kvm -cdrom $(ISO)
 
 -include $(DEPS)
