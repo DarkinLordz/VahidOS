@@ -73,7 +73,7 @@ int printf(const char * format, ...)
             }
             case 'x':
             {
-                char *hexboard = "0123456789abcdef";
+                char *hexboard = "0123456789abcdef  ";
                 int num = va_arg(va_data, int);
                 int bit_len = (sizeof(num) * 8) - 4;
                 char non_zero_occured = 0;
@@ -90,6 +90,11 @@ int printf(const char * format, ...)
 
                 break;
             }
+            case 'c':
+                print_character(va_arg(va_data, char));
+
+            case '%':
+                print_character('%');
             default:
                 break;
             }
