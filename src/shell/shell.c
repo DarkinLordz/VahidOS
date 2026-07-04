@@ -166,7 +166,8 @@ static void cmd_random(char *args)
 	(void)args;
 
 	random_number = random();
-	print(random_number);
+	itoa(random_number,random_number_string);
+	printf(random_number_string);
 }
 
 static void cmd_beep(char *args)
