@@ -56,6 +56,11 @@ int printf(const char * format, ...)
             {
                 char *hexboard = "0123456789ABCDEF";
                 int num = va_arg(va_data, int);
+                if (num == 0)
+                {
+                    print_character('0');
+                    continue;
+                }
                 int bit_len = (sizeof(num) * 8) - 4;
                 char non_zero_occured = 0;
 
@@ -73,8 +78,13 @@ int printf(const char * format, ...)
             }
             case 'x':
             {
-                char *hexboard = "0123456789abcdef  ";
+                char *hexboard = "0123456789abcdef";
                 int num = va_arg(va_data, int);
+                if (num == 0)
+                {
+                    print_character('0');
+                    continue;
+                }
                 int bit_len = (sizeof(num) * 8) - 4;
                 char non_zero_occured = 0;
 
@@ -93,27 +103,38 @@ int printf(const char * format, ...)
             case 'd':
             {
                 int num = va_arg(va_data, int);
-                int upper_p10 = 10;
+                unsigned int value;
+
                 if (num < 0)
                 {
                     print_character('-');
-                    num = -num;
+                    value = -(unsigned int)num;
                 }
-                while (num > upper_p10)
+                else
+                {
+                    value = (unsigned int)num;
+                }
+
+                unsigned int upper_p10 = 1;
+
+                while (value / upper_p10 >= 10)
                     upper_p10 *= 10;
-                
+
                 while (upper_p10 > 0)
                 {
-                    print_character((num/upper_p10) + '0');
-                    num %= upper_p10;
+                    print_character((value / upper_p10) + '0');
+                    value %= upper_p10;
                     upper_p10 /= 10;
                 }
+
+                break;
             }
             case 'c':
-                print_character(va_arg(va_data, char));
-
+                print_character(va_arg(va_data, int));
+                break;
             case '%':
                 print_character('%');
+                break;
             default:
                 break;
             }
