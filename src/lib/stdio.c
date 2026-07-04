@@ -29,3 +29,57 @@ void print_hex(uint32_t value)
 		print_hex_byte(byte);
 	}
 }
+
+int printf(const char * format, ...)
+{
+    char special = 0;
+
+    va_list va_data;
+    va_start(va_data, format);
+
+    for (int i = 0;format[i] != '\0';i++)
+    {
+
+        if ((!special) && (format[i] == '%'))
+        {
+            special = 1;
+            continue;
+        }
+
+        if (special)
+        {
+            special = 0;
+
+            switch (format[i])
+            {
+            case 'X':
+                char *hexboard = "0123456789ABCDEF";
+                int num = va_arg(va_data, int);
+                int bit_len = (sizeof(num) * 8) - 4;
+                char non_zero_occured = 0;
+
+                while (bit_len >= 0)
+                {
+                    char character = hexboard[ (num >> (bit_len)) & 0xf ];
+                    if (character != '0') non_zero_occured = 1;
+
+                    if (non_zero_occured)
+                        print_character(character);
+                    bit_len -= 4;
+                }
+
+                break;
+            
+            default:
+                break;
+            }
+        }
+        else 
+        {
+            print_character(format[i]);
+        }
+
+    }
+
+    va_end(va_data);
+}

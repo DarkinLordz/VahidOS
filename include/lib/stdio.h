@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdarg.h>
 #include <drivers/vga.h>
 
 
