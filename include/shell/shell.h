@@ -12,6 +12,7 @@
 #include "kernel/io.h"
 #include "lib/random.h"
 #include "lib/string.h"
+#include "lib/stdio.h"
 #include "drivers/sound.h"
 #include "shell/vi.h"
 
