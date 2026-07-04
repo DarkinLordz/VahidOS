@@ -129,6 +129,9 @@ int printf(const char * format, ...)
 
                 break;
             }
+            case 's':
+                print_string(va_arg(va_data, char *));
+                break;
             case 'c':
                 print_character(va_arg(va_data, int));
                 break;
@@ -147,4 +150,5 @@ int printf(const char * format, ...)
     }
 
     va_end(va_data);
+    return 0;
 }
