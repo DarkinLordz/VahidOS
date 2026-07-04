@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <drivers/vga.h>
+#include <lib/string.h>
 
 void print_string(const char *string);
 void print_hex_byte(uint8_t value);

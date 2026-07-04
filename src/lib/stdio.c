@@ -107,29 +107,12 @@ int printf(const char * format, ...)
             case 'd':
             {
                 int num = va_arg(va_data, int);
-                unsigned int value;
 
-                if (num < 0)
-                {
-                    print_character('-');
-                    value = -(unsigned int)num;
-                }
-                else
-                {
-                    value = (unsigned int)num;
-                }
+                char buffer[64];
 
-                unsigned int upper_p10 = 1;
+                itoa(num, buffer); /* No negative numbers~ Baka! */
 
-                while (value / upper_p10 >= 10)
-                    upper_p10 *= 10;
-
-                while (upper_p10 > 0)
-                {
-                    print_character((value / upper_p10) + '0');
-                    value %= upper_p10;
-                    upper_p10 /= 10;
-                }
+                print_string(buffer);
 
                 break;
             }
