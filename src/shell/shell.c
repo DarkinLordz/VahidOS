@@ -166,8 +166,7 @@ static void cmd_random(char *args)
 	(void)args;
 
 	random_number = random();
-	itoa(random_number, random_number_string);
-	print_string(random_number_string);
+	print(random_number);
 }
 
 static void cmd_beep(char *args)
@@ -236,8 +235,8 @@ static void execute_command(char *input)
 		}
 	}
 
-	print_string("Unknown command: ");
-	print_string(input);
+	printf("Unknown command: %s ", input);
+
 }
 
 void shell(void)
@@ -250,9 +249,9 @@ void shell(void)
 
 	keyboard_init();
 	clear();
-	print_string("Welcome to Vahix Shell!\n");
-	print_string("To see available commands, type 'help'\n");
-	print_string("# ");
+	printf("Welcome to Vahix Shell!\n");
+	printf("To see available commands, type 'help'\n");
+	printf("# ");
 
 	while (1) {
 		if (keyboard_poll_char(&key)) {
