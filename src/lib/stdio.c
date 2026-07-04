@@ -90,6 +90,25 @@ int printf(const char * format, ...)
 
                 break;
             }
+            case 'd':
+            {
+                int num = va_arg(va_data, int);
+                int upper_p10 = 10;
+                if (num < 0)
+                {
+                    print_character('-');
+                    num = -num;
+                }
+                while (num > upper_p10)
+                    upper_p10 *= 10;
+                
+                while (upper_p10 > 0)
+                {
+                    print_character((num/upper_p10) + '0');
+                    num %= upper_p10;
+                    upper_p10 /= 10;
+                }
+            }
             case 'c':
                 print_character(va_arg(va_data, char));
 
