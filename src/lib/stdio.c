@@ -53,6 +53,7 @@ int printf(const char * format, ...)
             switch (format[i])
             {
             case 'X':
+            {
                 char *hexboard = "0123456789ABCDEF";
                 int num = va_arg(va_data, int);
                 int bit_len = (sizeof(num) * 8) - 4;
@@ -69,7 +70,26 @@ int printf(const char * format, ...)
                 }
 
                 break;
-            
+            }
+            case 'x':
+            {
+                char *hexboard = "0123456789abcdef";
+                int num = va_arg(va_data, int);
+                int bit_len = (sizeof(num) * 8) - 4;
+                char non_zero_occured = 0;
+
+                while (bit_len >= 0)
+                {
+                    char character = hexboard[ (num >> (bit_len)) & 0xf ];
+                    if (character != '0') non_zero_occured = 1;
+
+                    if (non_zero_occured)
+                        print_character(character);
+                    bit_len -= 4;
+                }
+
+                break;
+            }
             default:
                 break;
             }
