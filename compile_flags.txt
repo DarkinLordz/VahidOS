@@ -1,0 +1,7 @@
+-xc
+--target=i686-elf
+-Iinclude
+-std=gnu99
+-ffreestanding
+-Wall
+-Wextra

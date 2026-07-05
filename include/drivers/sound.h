@@ -10,5 +10,6 @@
 
 void delay_ms(uint32_t ms);
 void pc_speaker_beep(uint32_t freq_hz, uint32_t duration_ms);
-
+void nsound();
+void plays(uint32_t nfrequence);
 #endif /* VAHIX_SOUND_H */
