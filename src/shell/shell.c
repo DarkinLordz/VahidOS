@@ -166,7 +166,7 @@ static void cmd_random(char *args)
 	(void)args;
 
 	random_number = random();
-	print(random_number);
+	printf("%d", random_number);
 }
 
 static void cmd_beep(char *args)
