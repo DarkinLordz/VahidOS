@@ -9,6 +9,7 @@
 
 #include "drivers/vga.h"
 #include "drivers/keyboard.h"
+#include "lib/stdio.h"
 
 void vi_run(void);
 

@@ -172,6 +172,7 @@ static void insert_newline(Editor *editor)
 static bool handle_normal(Editor *editor, uint8_t key)
 {
 	if (key == 'q') {
+		clear();
 		return false;
 	}
 
